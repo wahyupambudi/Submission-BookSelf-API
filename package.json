@@ -1,0 +1,20 @@
+{
+  "name": "Submission-BookSelf-API",
+  "version": "1.0.0",
+  "description": "Membuat CRUD BookSelf-API dengan Hapi",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wahyupambudi/Submission-BookSelf-API.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wahyupambudi/Submission-BookSelf-API/issues"
+  },
+  "homepage": "https://github.com/wahyupambudi/Submission-BookSelf-API#readme"
+}
