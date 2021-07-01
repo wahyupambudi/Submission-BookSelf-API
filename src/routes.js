@@ -31,7 +31,7 @@ const routes = [
       method: "DELETE",
       path: "/books/{id}",
       handler: deleteBooksByIdHandler,
-  }
+  },
 ];
 
 // melakukan exports routes

@@ -87,16 +87,84 @@ const addBooksHandler = (req, res) => {
 };
 
 // API dapat menampilkan seluruh buku
-const getAllBooksHandler = () => ({
-  status: "success",
-  data: {
-    books: books.map((item) => ({
-      id: item.id,
-      name: item.name,
-      publisher: item.publisher,
-    })),
-  },
-});
+const getAllBooksHandler = (req, res) => {
+  // referensi https://www.dicoding.com/academies/261/tutorials/14732
+  const { name, reading, finished } = req.query;
+
+  // filter untuk ?name
+  if (name !== undefined) {
+    const response = res.response({
+      status: "success",
+      data: {
+        books: books
+          .filter((books) =>
+            books.name.toLowerCase().includes(name.toLowerCase())
+          )
+          .map((item) => ({
+            id: item.id,
+            name: item.name,
+            publisher: item.publisher,
+          })),
+      },
+    });
+    response.code(200);
+    return response;
+  }
+
+  // filter untuk ?reading
+  if (reading) {
+    const isReading = reading === "1";
+    const response = res.response({
+      status: "success",
+      data: {
+        books: books
+          .filter((books) => books.reading === isReading)
+          .map((item) => ({
+            id: item.id,
+            name: item.name,
+            publisher: item.publisher,
+          })),
+      },
+    });
+    response.code(200);
+    return response;
+  }
+
+  // filter untuk ?finished
+  if (finished) {
+    const isFinish = finished === "1";
+    const response = res.response({
+      status: "success",
+      data: {
+        books: books
+          .filter((books) => books.finished === isFinish)
+          .map((item) => ({
+            id: item.id,
+            name: item.name,
+            publisher: item.publisher,
+          })),
+      },
+    });
+    response.code(200);
+    return response;
+  }
+
+  // untuk membaca semua data buku
+  if ((name, reading, finished === undefined)) {
+    const response = res.response({
+      status: "success",
+      data: {
+        books: books.map((item) => ({
+          id: item.id,
+          name: item.name,
+          publisher: item.publisher,
+        })),
+      },
+    });
+    response.code(200);
+    return response;
+  }
+};
 
 // API dapat menampilkan detail buku
 const getBooksByIdHanlder = (req, res) => {
