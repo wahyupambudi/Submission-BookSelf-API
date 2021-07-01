@@ -114,16 +114,84 @@ const getBooksByIdHanlder = (req, res) => {
   }
 
   const response = res.response({
-      "status": "fail",
-      "message": "Buku tidak ditemukan",
+    status: "fail",
+    message: "Buku tidak ditemukan",
+  });
+  response.code(404);
+  return response;
+};
+
+// API dapat mengubah data buku
+const editBooksByIdHandler = (req, res) => {
+  const { id } = req.params;
+
+  const {
+    name,
+    year,
+    author,
+    summary,
+    publisher,
+    pageCount,
+    readPage,
+    reading,
+  } = req.payload;
+
+  const nameIsBlank = name === undefined;
+  const readPageOverSize = readPage > pageCount;
+
+  if (readPageOverSize) {
+    const response = res.response({
+      status: "fail",
+      message:
+        "Gagal memperbarui buku. readPage tidak boleh lebih besar dari pageCount",
+    });
+    response.code(400);
+    return response;
+  } else if (nameIsBlank) {
+    const response = res.response({
+      status: "fail",
+      message: "Gagal memperbarui buku. Mohon isi nama buku",
+    });
+    response.code(400);
+    return response;
+  }
+
+  const updatedAt = new Date().toISOString();
+  const index = books.findIndex((book) => book.id === id);
+
+  if (index !== -1) {
+    books[index] = {
+      ...books[index],
+      name,
+      year,
+      author,
+      summary,
+      publisher,
+      pageCount,
+      readPage,
+      reading,
+      updatedAt,
+    };
+    const response = res.response({
+      status: "success",
+      message: "Buku berhasil diperbarui",
+    });
+    response.code(200);
+    return response;
+  } 
+  const response = res.response({
+    status: "fail",
+    message: "Gagal memperbarui buku. Id tidak ditemukan",
   });
   response.code(404);
   return response;
 
+  
 };
 
 module.exports = {
   addBooksHandler,
   getAllBooksHandler,
-  getBooksByIdHanlder
+  getBooksByIdHanlder,
+  editBooksByIdHandler,
 };
