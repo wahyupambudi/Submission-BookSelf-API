@@ -86,16 +86,44 @@ const addBooksHandler = (req, res) => {
   return response;
 };
 
-
-// handler get data books
+// API dapat menampilkan seluruh buku
 const getAllBooksHandler = () => ({
   status: "success",
   data: {
-    books,
+    books: books.map((item) => ({
+      id: item.id,
+      name: item.name,
+      publisher: item.publisher,
+    })),
   },
 });
+
+// API dapat menampilkan detail buku
+const getBooksByIdHanlder = (req, res) => {
+  const { id } = req.params;
+
+  const book = books.filter((n) => n.id === id)[0];
+
+  if (book != undefined) {
+    return {
+      status: "success",
+      data: {
+        book,
+      },
+    };
+  }
+
+  const response = res.response({
+      "status": "fail",
+      "message": "Buku tidak ditemukan",
+  });
+  response.code(404);
+  return response;
+
+};
 
 module.exports = {
   addBooksHandler,
   getAllBooksHandler,
+  getBooksByIdHanlder
 };
