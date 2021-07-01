@@ -124,7 +124,7 @@ const getBooksByIdHanlder = (req, res) => {
 // API dapat mengubah data buku
 const editBooksByIdHandler = (req, res) => {
   const { id } = req.params;
-
+  //   body request
   const {
     name,
     year,
@@ -140,6 +140,7 @@ const editBooksByIdHandler = (req, res) => {
   const readPageOverSize = readPage > pageCount;
 
   if (readPageOverSize) {
+    // Client melampirkan nilai properti readPage yang lebih besar dari nilai properti pageCount
     const response = res.response({
       status: "fail",
       message:
@@ -148,6 +149,7 @@ const editBooksByIdHandler = (req, res) => {
     response.code(400);
     return response;
   } else if (nameIsBlank) {
+    // Client tidak melampirkan properti name pada request body.
     const response = res.response({
       status: "fail",
       message: "Gagal memperbarui buku. Mohon isi nama buku",
@@ -157,8 +159,11 @@ const editBooksByIdHandler = (req, res) => {
   }
 
   const updatedAt = new Date().toISOString();
+
+  //   mencari book dengan id yang akan bernilai array
   const index = books.findIndex((book) => book.id === id);
 
+  //   menentukan success or fail
   if (index !== -1) {
     books[index] = {
       ...books[index],
@@ -178,15 +183,36 @@ const editBooksByIdHandler = (req, res) => {
     });
     response.code(200);
     return response;
-  } 
+  }
   const response = res.response({
     status: "fail",
     message: "Gagal memperbarui buku. Id tidak ditemukan",
   });
   response.code(404);
   return response;
+};
 
-  
+const deleteBooksByIdHandler = (req, res) => {
+  const { id } = req.params;
+  const index = books.findIndex((book) => book.id === id);
+
+  // pengecekan terhadap nilai index, semoga nilainya tidak -1
+  if (index !== -1) {
+    books.splice(index, 1);
+
+    const response = res.response({
+      status: "success",
+      message: "Buku berhasil dihapus",
+    });
+    response.code(200);
+    return response;
+  }
+  const response = res.response({
+    status: "fail",
+    message: "Buku gagal dihapus. Id tidak ditemukan",
+  });
+  response.code(404);
+  return response;
 };
 
 module.exports = {
@@ -194,4 +220,5 @@ module.exports = {
   getAllBooksHandler,
   getBooksByIdHanlder,
   editBooksByIdHandler,
+  deleteBooksByIdHandler,
 };
